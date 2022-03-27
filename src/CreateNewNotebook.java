@@ -79,34 +79,37 @@ public class CreateNewNotebook extends JFrame implements ActionListener {
 				writing to the notebook list text file i.e. adding the newly 
 				created notebook
 				*/
-				FileWriter addBook = new FileWriter(list_of_nb,true);
-				PrintWriter add_Book = new PrintWriter(addBook);
+				PrintWriter add_Book = new PrintWriter(new FileWriter(list_of_nb,true));
 				add_Book.println("> "+textField.getText());
 				add_Book.close();
-				addBook.close();
 				
 				//creating the actual notebook
 				File noteBook = new File(pathName+"\\NB_"+textField.getText());
 				noteBook.mkdir();
 				
 				//creating the first page   name -> "Page_1",etc
-				String pagePath=NoteBookPage.pathGiver(textField.getText())+"\\"+textField.getText()+"_Page_1.txt";
+				String pagePath=NewNoteBookPage.pathGiver(textField.getText())+"\\"+textField.getText()+"_Page_1.txt";
 				File noteBookPage=new File(pagePath);
 				noteBookPage.createNewFile();
 				
-				
-				FileWriter fontFileWriter = new FileWriter(noteBookPage);
-				PrintWriter fontWriter = new PrintWriter(fontFileWriter);
-				fontWriter.printf("black\n018\nMonospaced\n0");
+				PrintWriter fontWriter = new PrintWriter(new FileWriter(noteBookPage));
+				fontWriter.printf("black\nwhite\n018\nMonospaced\n0");
 				fontWriter.close();
-				fontFileWriter.close();
 				
 				
 				//creating the last accessed file storing the dates of the last time this book was accessed
-				String last_acc_date_file_path=NoteBookPage.pathGiver(textField.getText())+"\\"+textField.getText()+"_LastModified.txt";
-				File last_accessed_date_file=new File(last_acc_date_file_path);
-				last_accessed_date_file.createNewFile();
+				String book_info_pth=NewNoteBookPage.pathGiver(textField.getText())+"\\"+textField.getText()+"_Book_Info.txt";
+				File book_info_file=new File(book_info_pth);
+				book_info_file.createNewFile();
 				NewNoteBookPage.refresh();
+				
+				
+				PrintWriter pt = new PrintWriter(new FileWriter(book_info_file));
+				String dt = DateAndTimeGiver.dateGiver();
+				pt.println("Created On : "+dt);
+				pt.println("Last Mod : "+dt+" "+dt);
+				pt.println("Total Pages : 1");
+				pt.close();
 				
 			} catch (IOException e1) {
 				// TODO Auto-generated catch block

@@ -1,15 +1,9 @@
 import java.awt.Color;
 
-import javax.swing.plaf.ColorUIResource;
-
 public class MyColor {
-    private static Color color;
-    //Color [] colors = {Color.CYAN,Color.GRAY,Color.GREEN,Color.YELLOW,Color.LIGHT_GRAY,Color.PINK,Color.WHITE,Color.BLACK,Color.BLUE,Color.DARK_GRAY,Color.MAGENTA,Color.ORANGE,
-    		           //Color.RED};
-    
-//    public MyColor(){
-//        color = Color.WHITE;
-//    }
+
+	
+private static Color color;
     
     
     static Color getColor(String col) {
@@ -39,7 +33,7 @@ public class MyColor {
         case "lightgray":
             color = Color.LIGHT_GRAY;
             break;
-        case "magneta":
+        case "magenta":
             color = Color.MAGENTA;
             break;
         case "orange":

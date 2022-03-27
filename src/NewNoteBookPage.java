@@ -1,25 +1,15 @@
 import java.awt.BorderLayout;
-import java.awt.EventQueue;
-import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
-
-import javax.imageio.plugins.tiff.TIFFDirectory;
-import javax.lang.model.element.NestingKind;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.border.EmptyBorder;
 import java.awt.Color;
 import java.awt.Dimension;
 import javax.swing.border.LineBorder;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 import javax.swing.plaf.ColorUIResource;
 import javax.swing.plaf.FontUIResource;
-import javax.swing.plaf.synth.SynthGraphicsUtils;
-import javax.xml.transform.Source;
-
-import com.mysql.cj.jdbc.AbandonedConnectionCleanupThread;
+import com.mysql.cj.xdevapi.AbstractDataResult;
 
 import javax.swing.JLabel;
 import java.awt.Font;
@@ -32,15 +22,8 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
-import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Scanner;
-import java.util.SimpleTimeZone;
-import java.util.PrimitiveIterator.OfDouble;
-//import java.util.stream.Sink.ChainedDouble;
 import java.awt.event.ActionListener;
 import java.awt.event.ActionEvent;
 import javax.swing.SwingConstants;
@@ -52,27 +35,24 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JMenuItem;
 
-public class NewNoteBookPage extends JFrame implements ActionListener,ItemListener {
+public class NewNoteBookPage extends JFrame implements ActionListener,WindowListener {
 
 	private JPanel contentPane;
 	private ImageIcon fontChng = new ImageIcon(new ImageIcon("icons8-choose-font-24 (1).png").getImage().getScaledInstance(20,20,100));
-	private ImageIcon fontColorChng = new ImageIcon(new ImageIcon("icons8-paint-palette-30.png").getImage().getScaledInstance(20,20,100));
-	private ImageIcon fontSizeChng = new ImageIcon(new ImageIcon("icons8-font-size-48.png").getImage().getScaledInstance(20,20,100));
 	private ImageIcon deleteBookBtnn = new ImageIcon(new ImageIcon("icons8-delete-384 (1).png").getImage().getScaledInstance(20,20,100));
-	private ImageIcon refreshBtnn = new ImageIcon(new ImageIcon("icons8-refresh-64.png").getImage().getScaledInstance(15,15,100));
-	private ImageIcon delet_page_icon = new ImageIcon(new ImageIcon("icons8-delete-24.png").getImage().getScaledInstance(15,15,100));
-	private static JButton[] book_list;
-	private static JButton create_new_nb_btn;
+	private ImageIcon delet_page_icon = new ImageIcon(new ImageIcon("icons8-trash-19.png").getImage());
+	static JButton[] book_list;
+	static JButton create_new_nb_btn;
 	static JPanel book_list_panel;
 	
 	String [] themes = {"Dark","Light","Custom"};
 	
-	//
+	
 	private static String pathName = "C:\\DIGIBOOK\\NOTE_BOOKS";
 	
 	//the label for showing current notebook
-	private JLabel current_nb_label;
-	private JLabel current_notebook_shower;
+	static JLabel current_nb_label;
+	static JLabel current_notebook_shower;
 	
 	/*
 	The current selected notebook that will appear on the screen
@@ -85,34 +65,34 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 	static JTextArea second_page_textarea;
 	
 	//left and right page numbers
-	private JLabel leftpage_lbl;
-	private JLabel rightpage_lbl;
+	static JLabel leftpage_lbl;
+	static JLabel rightpage_lbl;
 	
 	//date created label
-	private JLabel date_lbl;
-	private JLabel date_mod_lbl;
+	static JLabel date_lbl;
+	static JLabel date_mod_lbl;
 	
 	//The next and previous page button
-	private JButton left_btn_next;
-	private JButton left_btn_prev;
-	private JButton right_btn_next;
-	private JButton right_btn_prev;
-	private JTextField page_no_tf_left;
-	private JTextField page_no_tf_right;
-	private JTextField insert_new_page_tf;
+	static JButton left_btn_next;
+    static JButton left_btn_prev;
+	static JButton right_btn_next;
+	static JButton right_btn_prev;
+	static JTextField page_no_tf_left;
+	static JTextField page_no_tf_right;
+	static JTextField insert_new_page_tf;
 	
-	//the three change font color and size buttons
-	private JButton change_font_btn;
+	//the font change button
+    static JButton change_font_btn;
 	
 	//delete book button
-	private JButton delete_book_btn;
+	static JButton delete_book_btn;
 	
 	//setting menu
 	JMenuItem setting_btn_in_menu;
 	
 	//delete current page button
-	private JButton delete_pg_btn_left;
-	private JButton delete_pg_btn_right;
+	static JButton delete_pg_btn_left;
+	static JButton delete_pg_btn_right;
 	
 	static Fontas left_side = new Fontas();
 	static Fontas right_side = new Fontas();
@@ -121,11 +101,11 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 	
 	private JComboBox comboBox;
 	
-	private JLabel Your_nbs_label;
+	static JLabel Your_nbs_label;
 	
-	private JLabel last_mod_lbl;
+	static JLabel last_mod_lbl;
 	
-	private JLabel date_created_lbl;
+	static JLabel date_created_lbl;
 	
 	static JPanel Functions_panel;
 	
@@ -134,28 +114,61 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 	static JMenu fileMenu;
 	static JMenu helpMenu;
 	
+	JMenuItem mntmNewMenuItem;
+	static JTextField textField;
+	static JTextField textField_1;
+	
+	static JButton btnNewButton_1;
+	static JButton btnNewButton;
+	
+	static JLabel lblNewLabel_5;
+	
+	//JLabel lblNewLabel_6;
+	private int tot_pg_in_cn=0;
+	
+	static JLabel lblNewLabel_4;
+	
+	static JLabel insert_new_page_lbl;
+	
+	static JLabel lblNewLabel_1;
+	static JLabel lblNewLabel;
+	static JLabel lblNewLabel_2;
+	static JLabel lblNewLabel_3;
+	
+	static JLabel Enter_page_no_lbl_left;
+	static JLabel Enter_page_no_lbl_right;
 	public NewNoteBookPage() {
 		
 		//for the main j frame
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setBounds(-7,0,1930,831);
+		this.addWindowListener(this);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
 		this.setContentPane(contentPane);
 		//this.setResizable(false);
 		this.setVisible(true);
-		this.setTitle("DiGIBOOK-NOTEBOOKS");
+		this.setTitle("DiGIBOOK");
 		contentPane.setLayout(null);
 		
 		
 		
+		left_side.size=18;
+		left_side.color_name="black";
+		left_side.page_color="white";
+		left_side.font="Monospaced";
+		left_side.fontType=0;
+		right_side.size=18;
+		right_side.color_name="black";
+		right_side.page_color="white";
+		right_side.font="Monospaced";
+		right_side.fontType=0;
 		
 		//the main pages panel
 		pages_panel = new JPanel();
 		pages_panel.setBounds(224, 100, 1316, 694);
 		pages_panel.setBackground(Color.GRAY);
 		contentPane.add(pages_panel);
-		//pages_panel.setBorder(new LineBorder(Color.BLACK,1));
 		pages_panel.setLayout(null);
 		
 		JPanel left_panel = new JPanel();
@@ -189,7 +202,6 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 		second_page_textarea.setFont(new Font("Monospaced", Font.PLAIN, 18));
 		second_page_textarea.setMargin(new Insets(30, 30, 30, 30));
 		second_page_textarea.setLineWrap(true);
-		//second_page_textarea.setBorder(new LineBorder(ColorUIResource.BLACK,2));
 		second_page_textarea.setOpaque(true);
 		right_scrollPane.setViewportView(second_page_textarea);
 		
@@ -263,13 +275,13 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 		pages_panel.add(page_no_tf_right);
 		page_no_tf_right.setColumns(10);
 		
-		JLabel Enter_page_no_lbl_left = new JLabel("Page no :");
+		Enter_page_no_lbl_left = new JLabel("Page no :");
 		Enter_page_no_lbl_left.setForeground(Color.WHITE);
 		Enter_page_no_lbl_left.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		Enter_page_no_lbl_left.setBounds(56, 670, 60, 13);
 		pages_panel.add(Enter_page_no_lbl_left);
 		
-		JLabel Enter_page_no_lbl_right = new JLabel("Page no :");
+		Enter_page_no_lbl_right = new JLabel("Page no :");
 		Enter_page_no_lbl_right.setForeground(Color.WHITE);
 		Enter_page_no_lbl_right.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		Enter_page_no_lbl_right.setBounds(709, 670, 60, 13);
@@ -285,7 +297,6 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 		
 		delete_pg_btn_right = new JButton("");
 		delete_pg_btn_right.setBackground(Color.LIGHT_GRAY);
-		//delete_pg_btn_right.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		delete_pg_btn_right.setBorder(null);
 		delete_pg_btn_right.setBounds(1223, 666, 39, 21);
 		delete_pg_btn_right.setIcon(delet_page_icon);
@@ -317,6 +328,18 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 		Your_nbs_label.setBounds(15, 15, 118, 21);
 		book_list_panel.add(Your_nbs_label);
 		
+		
+		create_new_nb_btn = new JButton("+ CREATE NEW NOTE-BOOK");
+		create_new_nb_btn.setBorder(null);
+		create_new_nb_btn.setBackground(Color.DARK_GRAY);
+		create_new_nb_btn.setFocusable(false);
+		create_new_nb_btn.setForeground(Color.WHITE);
+		create_new_nb_btn.setOpaque(false);
+		create_new_nb_btn.setHorizontalAlignment(JButton.LEFT);
+		create_new_nb_btn.setFont(new Font("Tahoma", Font.PLAIN, 13));
+		create_new_nb_btn.addActionListener(this);
+		book_list_panel.add(create_new_nb_btn);
+				
 		//initializing the array of buttons
 		book_list = new JButton[20];
 		//initially setting all the books to null
@@ -328,52 +351,8 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 			book_list[i].addActionListener(this);
 			book_list_panel.add(book_list[i]);
 		}
-		//file to access the list of notebooks text file
-		File noteBookList = new File(pathName+"\\LIST_OR_NAMES_OF_NOTE-BOOKS.txt");
-		int flg1=-1;
-		try {
-			Scanner listReader = new Scanner(noteBookList);
-			
-			//to skip the 'note book' list String on the first line
-			listReader.nextLine();
-			
-			//for loop to loop through the available notebooks
-			for(int i=0;listReader.hasNextLine();i++) {
-	
-				String NB1 = listReader.nextLine();
-				//book_list[i]=new JButton();
-				book_list[i].setText(NB1);
-				book_list[i].setBackground(Color.DARK_GRAY);
-				book_list[i].setVisible(true);
-				book_list[i].setBorder(null);
-				book_list[i].setFocusable(false);
-				book_list[i].setForeground(Color.WHITE);
-				book_list[i].setFont(new Font("Tahoma", Font.PLAIN, 14));
-				book_list[i].setHorizontalAlignment(JButton.LEFT);
-				book_list[i].setBounds(35,39+25*i,152,21);
-				flg1=i;
-			}
-			
-			//closing the scanner
-			listReader.close();
-			
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
 		
-		//create new notebook button
-		create_new_nb_btn = new JButton("+ CREATE NEW NOTE-BOOK");
-		create_new_nb_btn.setBorder(null);
-		create_new_nb_btn.setBackground(Color.DARK_GRAY);
-		create_new_nb_btn.setFocusable(false);
-		create_new_nb_btn.setForeground(Color.WHITE);
-		create_new_nb_btn.setOpaque(false);
-		create_new_nb_btn.setHorizontalAlignment(JButton.LEFT);
-		create_new_nb_btn.setFont(new Font("Tahoma", Font.PLAIN, 13));
-		create_new_nb_btn.setBounds(35, 39+25*(flg1+1), 180, 21);
-		create_new_nb_btn.addActionListener(this);
-		book_list_panel.add(create_new_nb_btn);
+		refresh();	
 		
 		//this will show the date created and the date it was last modified before today
 		date_created_lbl = new JLabel("Date created :");
@@ -400,7 +379,18 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 		date_mod_lbl.setBounds(113, 660, 85, 13);
 		book_list_panel.add(date_mod_lbl);
 		
-		String []themString = {"-Select-","DARK","LIGHT"};
+		lblNewLabel_4 = new JLabel("Total pages :");
+		lblNewLabel_4.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_4.setForeground(new Color(192, 192, 192));
+		lblNewLabel_4.setBounds(15, 608, 83, 21);
+		book_list_panel.add(lblNewLabel_4);
+		
+		lblNewLabel_5 = new JLabel("-");
+		lblNewLabel_5.setForeground(Color.WHITE);
+		lblNewLabel_5.setFont(new Font("Tahoma", Font.PLAIN, 14));
+		lblNewLabel_5.setBounds(103, 613, 85, 13);
+		book_list_panel.add(lblNewLabel_5);
+		
 		
 		
 		
@@ -440,21 +430,21 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 		helpMenu.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		menuBar.add(helpMenu);
 		
-//		JMenu mnNewMenu = new JMenu("File");
-//		mnNewMenu.setFont(new Font("Tahoma", Font.PLAIN, 12));
-//		mnNewMenu.setForeground(Color.LIGHT_GRAY);
-//		menuBar.add(mnNewMenu);
-		
+		mntmNewMenuItem = new JMenuItem("Instructions");
+		mntmNewMenuItem.setHorizontalAlignment(SwingConstants.LEFT);
+		mntmNewMenuItem.addActionListener(this);
+		mntmNewMenuItem.setPreferredSize(new Dimension(100, 24));
+		helpMenu.add(mntmNewMenuItem);
 		
 		current_nb_label = new JLabel("Current NoteBook : ");
 		current_nb_label.setHorizontalAlignment(SwingConstants.CENTER);
 		current_nb_label.setFont(new Font("Tahoma", Font.PLAIN, 30));
-		current_nb_label.setBounds(663, 44, 270, 50);
+		current_nb_label.setBounds(628, 44, 270, 50);
 		Functions_panel.add(current_nb_label);
 		
 		current_notebook_shower = new JLabel("-");
 		current_notebook_shower.setFont(new Font("Tahoma", Font.BOLD, 30));
-		current_notebook_shower.setBounds(936, 44, 508, 50);
+		current_notebook_shower.setBounds(894, 44, 348, 50);
 		Functions_panel.add(current_notebook_shower);
 		
 		delete_book_btn = new JButton("");
@@ -463,11 +453,11 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 		delete_book_btn.setFocusable(false);
 		delete_book_btn.setBorder(null);
 		delete_book_btn.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		delete_book_btn.setBounds(1497, 69, 37, 27);
+		delete_book_btn.setBounds(1495, 69, 37, 27);
 		delete_book_btn.addActionListener(this);
 		Functions_panel.add(delete_book_btn);
 		
-		//The 3 change font, size and color buttons
+		//The font change button
 		change_font_btn = new JButton("");
 		change_font_btn.setBackground(Color.GRAY);
 		change_font_btn.setBorder(null);
@@ -486,7 +476,7 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 		Functions_panel.add(insert_new_page_tf);
 		insert_new_page_tf.setColumns(10);
 		
-		JLabel insert_new_page_lbl = new JLabel("Insert new page at :");
+		insert_new_page_lbl = new JLabel("Insert new page at :");
 		insert_new_page_lbl.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		insert_new_page_lbl.setBounds(234, 73, 117, 21);
 		Functions_panel.add(insert_new_page_lbl);
@@ -495,8 +485,62 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 		comboBox.setFocusable(false);
 		comboBox.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		comboBox.setBounds(46, 36, 64, 30);
-		comboBox.addItemListener(this);
+		comboBox.addActionListener(this);
 		Functions_panel.add(comboBox);
+		
+		btnNewButton = new JButton("DLA");
+		btnNewButton.setFocusable(false);
+		btnNewButton.setForeground(Color.WHITE);
+		btnNewButton.setBounds(1415, 69, 63, 27);
+		Functions_panel.add(btnNewButton);
+		btnNewButton.setBorder(null);
+		btnNewButton.addActionListener(this);
+		btnNewButton.setBackground(Color.GRAY);
+		btnNewButton.setIcon(deleteBookBtnn);
+		
+		btnNewButton_1 = new JButton("DLS");
+		btnNewButton_1.setFocusable(false);
+		btnNewButton_1.setForeground(Color.WHITE);
+		btnNewButton_1.setBounds(1246, 69, 63, 27);
+		Functions_panel.add(btnNewButton_1);
+		btnNewButton_1.addActionListener(this);
+		btnNewButton_1.setBorder(null);
+		btnNewButton_1.setBackground(Color.GRAY);
+		btnNewButton_1.setIcon(deleteBookBtnn);
+		
+		textField = new JTextField();
+		textField.setHorizontalAlignment(SwingConstants.CENTER);
+		textField.setBorder(null);
+		textField.setBounds(1312, 69, 41, 27);
+		Functions_panel.add(textField);
+		textField.setColumns(10);
+		
+		textField_1 = new JTextField();
+		textField_1.setHorizontalAlignment(SwingConstants.CENTER);
+		textField_1.setBorder(null);
+		textField_1.setBounds(1356, 69, 41, 27);
+		Functions_panel.add(textField_1);
+		textField_1.setColumns(10);
+		
+		lblNewLabel = new JLabel("From");
+		lblNewLabel.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel.setBounds(1312, 53, 41, 13);
+		Functions_panel.add(lblNewLabel);
+		
+		lblNewLabel_1 = new JLabel("To");
+		lblNewLabel_1.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_1.setBounds(1356, 53, 41, 13);
+		Functions_panel.add(lblNewLabel_1);
+		
+		lblNewLabel_2 = new JLabel("<html>|<br>|</html>");
+		lblNewLabel_2.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_2.setBounds(1479, 71, 17, 23);
+		Functions_panel.add(lblNewLabel_2);
+		
+		lblNewLabel_3 = new JLabel("<html>|<br>|</html>");
+		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
+		lblNewLabel_3.setBounds(1398, 71, 17, 23);
+		Functions_panel.add(lblNewLabel_3);
 		
 		
 	}
@@ -504,193 +548,36 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		
-		//action after clicking on create new note book
-		if(e.getSource()==create_new_nb_btn) {
-			
-			//new JFrame to create new NB
-			new CreateNewNotebook();
-			return;
-		}
-		
-		//delete current book function
-		if(e.getSource()==delete_book_btn) {
-			
-			if(currentNB=="") {
-				
-				//if there is no notebook selected
-				JOptionPane.showMessageDialog(null,"You have no book selected");
-				return;
-			}
-			
-			int choice = JOptionPane.showConfirmDialog(null,"Do you really want to delete the current book ?", currentNB,JOptionPane.YES_NO_OPTION);
-			
-			if(choice==0) {
-				
-				//calling delete method
-				deleteBook(new File(pathGiver(currentNB)));
-				//removing the book name form the list of books text file
-				File list_of_nb = new File(pathName+"\\LIST_OR_NAMES_OF_NOTE-BOOKS.txt");
-				
-				try {
-					
-					Scanner file_rdr = new Scanner(list_of_nb);
-					String wholeString="";
-					int i=0;
-					while(file_rdr.hasNextLine()) {
-						if(i==0) {
-							wholeString = wholeString + file_rdr.nextLine();
-							i=1;
-						}
-						else {
-							wholeString = wholeString +"\n"+ file_rdr.nextLine();
-						}
-					}
-					wholeString=wholeString+"\n";
-					wholeString=wholeString.replace("> "+currentNB+"\n","");
-					
-					FileWriter addBook = new FileWriter(list_of_nb);
-					PrintWriter add_Book = new PrintWriter(addBook);
-					
-					add_Book.print(wholeString);
-					
-					add_Book.close();
-					addBook.close();
-					file_rdr.close();
-					refresh();
-					currentNB="";
-					current_notebook_shower.setText("-");
-					
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-			return;
-		}		
-		
-		// private static String pathName = "C:\\DIGIBOOK\\NOTE_BOOKS"; for reference path name for book so that 
-		// I don't have to scroll all the way up
-		
-		for(int i=0;i<20;i++) {
-			if(e.getSource().equals(book_list[i])) {
-				
-				//current book name in bold name
-				currentNB=book_list[i].getText().replace("> ","");
-				current_notebook_shower.setText("'"+currentNB+"'");
-				
-				//file for the notebooks 1st and 2nd page
-				File noteBookPage;
-				//path String of NB 1st and 2nd page
-				String pname;
-				//scanner to read from the books and append to text area
-				Scanner pagereader;
-				try {
-					
-					//reading the first page data
-					pname=pathGiver(currentNB,1);
-					noteBookPage = new File(pname);
-					//for copying the page 1 contents on the left page
-					
-					readingTxtFile(noteBookPage,0);
-					leftpage_lbl.setText(String.valueOf(1));
-					
-					//for copying the page 1 contents on the right page
-					
-					readingTxtFile(noteBookPage, 1);
-					rightpage_lbl.setText(String.valueOf(1));
-		            
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				//all this for getting the date and of creation of a particular notebook
-				File ActualNB=new File(pathGiver(currentNB));
-				BasicFileAttributes ftpAttr = null;
-				try {
-					ftpAttr = Files.readAttributes(ActualNB.toPath(),BasicFileAttributes.class);
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				String crea_date = String.valueOf(ftpAttr.creationTime()).substring(0,10);
-				String crea_date_arranged = crea_date.substring(8,10)+crea_date.substring(4,8)+crea_date.substring(0,4);
-				//System.out.println(crea_date_arranged);
-				//date_mod_lbl.setText(DateAndTimeGiver.dateGiver());
-				date_lbl.setText(crea_date_arranged);
-				
-				//for modified date 
-				File mod_dt = new File(pathGiver(currentNB)+"\\"+currentNB+"_LastModified.txt");
-				Scanner dt_rdr=null;
-				try {
-					 dt_rdr = new Scanner(mod_dt);
-				} catch (FileNotFoundException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				date_mod_lbl.setText(dt_rdr.nextLine());
-				dt_rdr.close();
-				
-				
-				try {
-					FileWriter tomFileWriter = new FileWriter(mod_dt);
-					PrintWriter tomPrintWriter = new PrintWriter(tomFileWriter);
-					
-					tomPrintWriter.println(DateAndTimeGiver.dateGiver());
-					tomPrintWriter.close();
-					tomFileWriter.close();
-					
-					
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				//enabling the next and prev page buttons
-				left_btn_next.setEnabled(true);
-				left_btn_prev.setEnabled(true);
-				right_btn_next.setEnabled(true);
-				right_btn_prev.setEnabled(true);
-				return;
-			}
-		}
-		
-		
-		
 		
 		//for left side page next button
 		if(e.getSource()==left_btn_next) {
-			int curr_pg_no = Integer.parseInt(leftpage_lbl.getText());
-			savingThroughLeftTextArea(curr_pg_no);
-			int next_pg_no = curr_pg_no+1;
-			copy(1, currentNB, next_pg_no);
+			int curr_pg = Integer.parseInt(leftpage_lbl.getText());
+			savingThroughLeftTextArea(curr_pg);
+			copy(1, currentNB, curr_pg+1);
 			return;
 		}
 		
 		//for left side page previous button
 		if(e.getSource()==left_btn_prev) {
-			int curr_pg_no = Integer.parseInt(leftpage_lbl.getText());
-			savingThroughLeftTextArea(curr_pg_no);
-			int prev_pg_no = curr_pg_no-1;
-			copy(1, currentNB, prev_pg_no);
+			int curr_pg = Integer.parseInt(leftpage_lbl.getText());
+			savingThroughLeftTextArea(curr_pg);
+			copy(1, currentNB, curr_pg-1);
 			return;
 		}
 		
 		//for right side page next button
 		if(e.getSource()==right_btn_next) {
-			int curr_pg_no = Integer.parseInt(rightpage_lbl.getText());
-			savingThroughRightTextArea(curr_pg_no);
-			int next_pg_no = curr_pg_no+1;
-			copy(2, currentNB, next_pg_no);
+			int curr_pg = Integer.parseInt(rightpage_lbl.getText());
+			savingThroughRightTextArea(curr_pg);
+			copy(2, currentNB, curr_pg+1);
 			return;
 		}
 		
 		//for right side page previous button
 		if(e.getSource()==right_btn_prev) {
-			int curr_pg_no = Integer.parseInt(rightpage_lbl.getText());
-			savingThroughRightTextArea(curr_pg_no);
-			int prev_pg_no = curr_pg_no-1;
-			copy(2, currentNB, prev_pg_no);
+			int curr_pg = Integer.parseInt(rightpage_lbl.getText());
+			savingThroughRightTextArea(curr_pg);
+			copy(2, currentNB, curr_pg-1);
 			return;
 		}
 		
@@ -732,6 +619,133 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 			return;
 		}
 		
+		
+		//action after clicking on create new note book
+		if(e.getSource()==create_new_nb_btn) {
+			
+			//new JFrame to create new NB
+			new CreateNewNotebook();
+			return;
+		}
+		
+		//delete current book function
+		if(e.getSource()==delete_book_btn) {
+			
+			if(currentNB=="") {
+				
+				showAddBook();
+			}
+			else {
+				int choice = JOptionPane.showConfirmDialog(null,"Do you really want to delete the current book ?", currentNB,JOptionPane.YES_NO_OPTION);
+				if(choice==0) {
+					
+					//calling delete method
+					deleteBook(new File(pathGiver(currentNB)));
+					//removing the book name form the list of books text file
+					File list_of_nb = new File(pathName+"\\LIST_OR_NAMES_OF_NOTE-BOOKS.txt");
+					
+					try {
+						
+						Scanner file_rdr = new Scanner(list_of_nb);
+						String wholeString = file_rdr.nextLine();
+						while(file_rdr.hasNextLine()) {
+							
+							wholeString = wholeString +"\n"+ file_rdr.nextLine();
+							
+						}
+						wholeString=wholeString+"\n";
+						wholeString=wholeString.replace("> "+currentNB+"\n","");
+						file_rdr.close();
+						
+						PrintWriter add_Book = new PrintWriter(new FileWriter(list_of_nb));
+						
+						add_Book.print(wholeString);
+						
+						add_Book.close();
+						
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+					
+					refresh();
+					currentNB="";
+					current_notebook_shower.setText("-");
+					date_lbl.setText("-");
+					date_mod_lbl.setText("-");
+					lblNewLabel_5.setText("-");
+					left_btn_next.setEnabled(false);
+					left_btn_prev.setEnabled(false);
+					right_btn_next.setEnabled(false);
+					right_btn_prev.setEnabled(false);
+				}
+			}
+			return;
+		}		
+		
+		// private static String pathName = "C:\\DIGIBOOK\\NOTE_BOOKS"; for reference path name for book so that
+		
+		for(int i=0;i<20;i++) {
+			if(e.getSource().equals(book_list[i])) {
+				
+				//removing the current notebook
+				remove_curr();
+				
+				//current book name in bold name
+				currentNB=book_list[i].getText().replace("> ","");
+				current_notebook_shower.setText("'"+currentNB+"'");
+				
+				//file for the notebooks 1st page
+				File noteBookPage;
+				try {
+					
+					//reading the first page data
+					noteBookPage = new File(pathGiver(currentNB, 1));
+					
+					//for copying the page 1 contents on the left page
+					readingTxtFile(noteBookPage,0);
+					leftpage_lbl.setText(String.valueOf(1));
+					
+					//for copying the page 1 contents on the right page
+					readingTxtFile(noteBookPage, 1);
+					rightpage_lbl.setText(String.valueOf(1));
+		            
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				//for modified date 
+				File info_file = new File(pathGiver(currentNB)+"\\"+currentNB+"_Book_Info.txt");
+				Scanner dt_rdr=null;
+				try {
+					 dt_rdr = new Scanner(info_file);
+				} catch (FileNotFoundException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				date_lbl.setText(dt_rdr.nextLine().substring(13,23));
+				String disp = dt_rdr.nextLine();
+				if(DateAndTimeGiver.dateGiver().equals(disp.substring(22,32))) {
+					date_mod_lbl.setText(disp.substring(11,21));
+				}
+				else {
+					date_mod_lbl.setText(disp.substring(22,32));
+				}
+				//if(DateAndTimeGiver.dateGiver()==)
+				lblNewLabel_5.setText(dt_rdr.nextLine().substring(14));
+				tot_pg_in_cn = Integer.parseInt(lblNewLabel_5.getText().trim());
+				dt_rdr.close();
+			
+				//enabling the next and prev page buttons
+				left_btn_next.setEnabled(true);
+				left_btn_prev.setEnabled(true);
+				right_btn_next.setEnabled(true);
+				right_btn_prev.setEnabled(true);
+				return;
+			}
+		}
+		
 		//inserting a new page in the current notebook
 		if(e.getSource()==insert_new_page_tf) {
 			insertPage(currentNB,Integer.parseInt(insert_new_page_tf.getText()));
@@ -753,6 +767,12 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 			return;
 		}
 		
+		//instructions panel
+		if(e.getSource()==mntmNewMenuItem) {
+			new InstructionPanel();
+			return;
+		}
+		
 		//left side page delete
 		if(e.getSource()==delete_pg_btn_left) {
 			
@@ -761,18 +781,30 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 			}
 			
 			else {
-				File currPage = new File(pathGiver(currentNB,Integer.parseInt(leftpage_lbl.getText())));
-				currPage.delete();
-				File nextPage =  new File(pathGiver(currentNB, Integer.parseInt(leftpage_lbl.getText())+1));
-				
-				for(int i=1;nextPage.exists();i++){
-					
-					nextPage = new File(pathGiver(currentNB, Integer.parseInt(leftpage_lbl.getText())+i));
-					nextPage.renameTo(new File(pathGiver(currentNB,Integer.parseInt(leftpage_lbl.getText())+i-1)));
-					nextPage = new File(pathGiver(currentNB, Integer.parseInt(leftpage_lbl.getText())+i+1));
+				if(tot_pg_in_cn==1) {
+					JOptionPane.showMessageDialog(null, "You cannot delete the only page left");
 				}
-				copy(1, currentNB, Integer.parseInt(leftpage_lbl.getText()));
-				copy(2, currentNB, Integer.parseInt(rightpage_lbl.getText()));
+				else {
+					int choice = JOptionPane.showConfirmDialog(null, "Do you want to delete page "+leftpage_lbl.getText()+" from "+currentNB,currentNB,JOptionPane.YES_NO_OPTION);
+					if(choice==0) {
+						File currPage = new File(pathGiver(currentNB,Integer.parseInt(leftpage_lbl.getText())));
+						currPage.delete();
+						File nextPage =  new File(pathGiver(currentNB, Integer.parseInt(leftpage_lbl.getText())+1));
+						
+						for(int i=1;nextPage.exists();i++){
+							
+							nextPage = new File(pathGiver(currentNB, Integer.parseInt(leftpage_lbl.getText())+i));
+							nextPage.renameTo(new File(pathGiver(currentNB,Integer.parseInt(leftpage_lbl.getText())+i-1)));
+							nextPage = new File(pathGiver(currentNB, Integer.parseInt(leftpage_lbl.getText())+i+1));
+						}
+						copy(1, currentNB, Integer.parseInt(leftpage_lbl.getText()));
+						copy(2, currentNB, Integer.parseInt(rightpage_lbl.getText()));
+						tot_pg_in_cn--;
+						lblNewLabel_5.setText(String.valueOf(tot_pg_in_cn));
+						//adjusting the proper page after inserting or deleting a page
+						adjustPage();
+					}
+				}
 			}
 			return;
 			
@@ -786,38 +818,186 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
         	}
         	
         	else {
-				File currPage = new File(pathGiver(currentNB,Integer.parseInt(rightpage_lbl.getText())));
-				currPage.delete();
-				File nextPage =  new File(pathGiver(currentNB, Integer.parseInt(rightpage_lbl.getText())+1));
-				
-				for(int i=1;nextPage.exists();i++){
-					
-					nextPage = new File(pathGiver(currentNB, Integer.parseInt(rightpage_lbl.getText())+i));
-					nextPage.renameTo(new File(pathGiver(currentNB,Integer.parseInt(rightpage_lbl.getText())+i-1)));
-					nextPage = new File(pathGiver(currentNB, Integer.parseInt(rightpage_lbl.getText())+i+1));
+        		if(tot_pg_in_cn==1) {
+					JOptionPane.showMessageDialog(null, "You cannot delete the only page left");
 				}
-				copy(2, currentNB, Integer.parseInt(rightpage_lbl.getText()));
-				copy(1, currentNB, Integer.parseInt(leftpage_lbl.getText()));
+        		else {
+        			int choice = JOptionPane.showConfirmDialog(null, "DO you want to delete page "+rightpage_lbl.getText()+" from "+currentNB,currentNB,JOptionPane.YES_NO_OPTION);
+    				if(choice==0) {
+    					File currPage = new File(pathGiver(currentNB,Integer.parseInt(rightpage_lbl.getText())));
+    					currPage.delete();
+    					File nextPage =  new File(pathGiver(currentNB, Integer.parseInt(rightpage_lbl.getText())+1));
+    					
+    					for(int i=1;nextPage.exists();i++){
+    						
+    						nextPage = new File(pathGiver(currentNB, Integer.parseInt(rightpage_lbl.getText())+i));
+    						nextPage.renameTo(new File(pathGiver(currentNB,Integer.parseInt(rightpage_lbl.getText())+i-1)));
+    						nextPage = new File(pathGiver(currentNB, Integer.parseInt(rightpage_lbl.getText())+i+1));
+    					}
+    					copy(2, currentNB, Integer.parseInt(rightpage_lbl.getText()));
+    					copy(1, currentNB, Integer.parseInt(leftpage_lbl.getText()));
+    					tot_pg_in_cn--;
+    					lblNewLabel_5.setText(String.valueOf(tot_pg_in_cn));
+    					//adjusting the proper page after inserting or deleting a page
+    					adjustPage();
+    				}
+        		}
 			}
 			return;
 			
 		}
-		
+        
+        //delete all page except page 1
+        if(e.getSource()==btnNewButton) {
+        	if(currentNB=="") {
+        		showAddBook();
+        	}
+        	else {
+        		int ch = JOptionPane.showConfirmDialog(null,"Do you wan to delete all the pages except the first page ?",currentNB,JOptionPane.YES_NO_OPTION);
+            	if(ch==0) {
+            		File delFile = new File(pathGiver(currentNB, 2));
+                	for(int i=3;delFile.exists();i++) {
+                		delFile.delete();
+                		delFile = new File(pathGiver(currentNB, i));
+                	}
+                	leftpage_lbl.setText("1");
+                	rightpage_lbl.setText("1");
+                	copy(1, currentNB, Integer.parseInt(leftpage_lbl.getText()));
+        			copy(2, currentNB, Integer.parseInt(rightpage_lbl.getText()));
+        			tot_pg_in_cn=1;
+        			lblNewLabel_5.setText(String.valueOf(tot_pg_in_cn));
+            	}
+        	}
+        	
+        	return;
+        }
+        
+        //delete selected pages
+        if(e.getSource()==btnNewButton_1) {
+        	if(currentNB=="") {
+        		showAddBook();
+        	}
+        	else {
+        		int u=Integer.parseInt(textField_1.getText().toString());
+        		int l=Integer.parseInt(textField.getText().toString());
+        		if(u<l) {
+            		JOptionPane.showMessageDialog(null,"The lower limit is higher than the upper limit");
+            	}
+
+            	else {
+            		if(l<=1) {
+            			JOptionPane.showMessageDialog(null,"You cannot delete page 1 or lower");
+            		}
+            		else {
+            			File uper = new File(pathGiver(currentNB, u));
+        				if(uper.exists()) {
+        					
+            				File trav;
+            				for(int i=0;i+l<=u;i++){
+            					trav = new File(pathGiver(currentNB,l+i));
+            					trav.delete();
+            				}
+            				int decr=u-l+1; 
+            				File nextPages = new File(pathGiver(currentNB, u+1));
+            				File rt;
+            				for(int i=1;nextPages.exists();i++) {
+            					nextPages = new File(pathGiver(currentNB, u+i));
+                				rt = new File(pathGiver(currentNB, u+i-decr));
+                				nextPages.renameTo(rt);
+            					nextPages =  new File(pathGiver(currentNB, u+i+1));
+            				}
+            				
+            				
+            				copy(2, currentNB, Integer.parseInt(rightpage_lbl.getText()));
+            				copy(1, currentNB, Integer.parseInt(leftpage_lbl.getText()));
+            				tot_pg_in_cn-=(u-l+1);
+            				lblNewLabel_5.setText(String.valueOf(tot_pg_in_cn));
+            				//adjusting the proper page after inserting or deleting a page
+            				adjustPage();
+        					
+        				}
+        				else {
+        					JOptionPane.showMessageDialog(null, "No such pages exist");
+        					
+        				}
+            		}
+            	}
+        	}
+        	return;
+        }
+        
+        if(e.getSource()==comboBox) {
+			
+			if(String.valueOf(comboBox.getSelectedItem())=="Dark") {
+				book_list_panel.setBackground(ColorUIResource.DARK_GRAY);
+				create_new_nb_btn.setForeground(ColorUIResource.WHITE);
+				Your_nbs_label.setForeground(ColorUIResource.LIGHT_GRAY);
+				for(int i=0;i<20;i++) {
+					book_list[i].setForeground(ColorUIResource.WHITE);
+				}
+				last_mod_lbl.setForeground(ColorUIResource.LIGHT_GRAY);  
+				date_mod_lbl.setForeground(ColorUIResource.WHITE);
+				date_lbl.setForeground(ColorUIResource.WHITE);           
+				date_created_lbl.setForeground(ColorUIResource.LIGHT_GRAY);
+				lblNewLabel_5.setForeground(ColorUIResource.WHITE);      
+				lblNewLabel_4.setForeground(ColorUIResource.LIGHT_GRAY);
+				book_list_panel.setBorder(new LineBorder(ColorUIResource.WHITE, 2));
+				
+				Functions_panel.setBackground(ColorUIResource.LIGHT_GRAY);
+				menuBar.setBackground(ColorUIResource.DARK_GRAY);
+				menuBar.setBorder(null);
+				insert_new_page_tf.setBorder(null);
+				textField.setBorder(null);
+				textField_1.setBorder(null);
+				
+				fileMenu.setForeground(ColorUIResource.LIGHT_GRAY);
+				helpMenu.setForeground(ColorUIResource.LIGHT_GRAY);
+				
+			}
+			else if(String.valueOf(comboBox.getSelectedItem())=="Light") {
+            	book_list_panel.setBackground(ColorUIResource.WHITE);
+				create_new_nb_btn.setForeground(ColorUIResource.BLACK);
+				Your_nbs_label.setForeground(ColorUIResource.DARK_GRAY);
+				for(int i=0;i<20;i++) {
+					book_list[i].setForeground(ColorUIResource.BLACK);
+				}
+				last_mod_lbl.setForeground(ColorUIResource.BLACK);
+				date_mod_lbl.setForeground(ColorUIResource.BLACK);
+				date_lbl.setForeground(ColorUIResource.BLACK);
+				date_created_lbl.setForeground(ColorUIResource.BLACK);
+				lblNewLabel_5.setForeground(ColorUIResource.BLACK);
+				lblNewLabel_4.setForeground(ColorUIResource.BLACK);
+				book_list_panel.setBorder(new LineBorder(ColorUIResource.BLACK, 2));
+				
+				Functions_panel.setBackground(ColorUIResource.WHITE);
+				menuBar.setBackground(ColorUIResource.WHITE);
+				menuBar.setBorder(new LineBorder(ColorUIResource.BLACK,2));
+				menuBar.setBackground(ColorUIResource.WHITE);
+				fileMenu.setForeground(ColorUIResource.BLACK);
+				helpMenu.setForeground(ColorUIResource.BLACK);
+				pages_panel.setBorder(null);
+				insert_new_page_tf.setBorder(new LineBorder(ColorUIResource.BLACK,1));
+				textField.setBorder(new LineBorder(ColorUIResource.BLACK,1));
+				textField_1.setBorder(new LineBorder(ColorUIResource.BLACK,1));
+				
+				
+			}
+            else if(String.valueOf(comboBox.getSelectedItem())=="Custom") {
+            	
+            	new SettingScreen();
+            }
+			return;
+		}
 	}
 	
 	/**
-	 *this function accepts only name of the notebook without including
-	 *the 'NB_th...' and returns the path_string of the entered book
+	 *book path/book page path Giver
 	 */
 	public static String pathGiver(String book_name) {
 		String path_of_book=pathName+"\\NB_"+book_name;
 		return path_of_book;
 	}
 	
-	/**
-	 *this function accepts name and page no of the notebook without including
-	 *the 'NB_th...' and returns the path_string of the entered books page number
-	 */	
 	public static String pathGiver(String book_name,int page_no) {
 		String path_of_book_page=pathGiver(book_name)+"\\"+currentNB+"_Page_"+String.valueOf(page_no)+".txt";
 		return path_of_book_page;
@@ -837,81 +1017,44 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 			File new_pages_prev_page = new File(pathGiver(currentNB,insert_page_no-1));
 			
 			
-			//booleans to define the three page existences
-			boolean a,b,c;
+			//booleans to define the two page existences
+			boolean a,c;
 			a=new_page.exists();
-			//b=new_pages_next_page.exists();
 			c=new_pages_prev_page.exists();
 			
 			if(a || c) {
 				
 				
 				if(a) {
+					
 					changeFileName(new_page,new_pages_next_page,insert_page_no);
-					System.out.println("oih");
 					
 				}
+				savingThroughLeftTextArea(Integer.parseInt(leftpage_lbl.getText()));
+				savingThroughRightTextArea(Integer.parseInt(rightpage_lbl.getText()));
 				File new_insert_page = new File(pathGiver(currentNB, insert_page_no));
 				try {
 					new_insert_page.createNewFile();
-					FileWriter fontFileWriter = new FileWriter(new_insert_page);
-					PrintWriter fontWriter = new PrintWriter(fontFileWriter);
-					fontWriter.println("black\n018\nMonospaced\n0");
-					//System.out.println("one");
+					PrintWriter fontWriter = new PrintWriter(new FileWriter(new_insert_page));
+					fontWriter.println("black\nwhite\n018\nMonospaced\n0");
 					fontWriter.close();
-					fontFileWriter.close();
-					//System.out.println("two");
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
+				copy(1, currentNB, Integer.parseInt(leftpage_lbl.getText()));
+				copy(2, currentNB, Integer.parseInt(rightpage_lbl.getText()));
 				
-				//this whole thing is for if the page is inserted at a place where the current page is open then reload it then and there so that user doesn't need to
-				//go front then come behind in order to see the results
-				File abgF = new File(pathGiver(currentNB,Integer.parseInt(leftpage_lbl.getText())));
-				File abgf = new File(pathGiver(currentNB,Integer.parseInt(rightpage_lbl.getText())));
-				first_page_textarea.setText("");
-				second_page_textarea.setText("");
-				try {
-					Scanner scanner = new Scanner(abgF);
-					Scanner scnnr = new Scanner(abgf);
-					
-					//skipping the the first lines of both pages
-					for(int i=0;i<4;i++) {
-						scanner.nextLine();
-						scnnr.nextLine();
-					}
-					while(scanner.hasNextLine()) {
-						
-						//left side page showing page current+1
-						first_page_textarea.append(scanner.nextLine()+"\n");
-						//leftpage_lbl.setText(String.valueOf(1));
-					}
-                    while(scnnr.hasNextLine()) {
-						
-						//left side page showing page current+1
-						second_page_textarea.append(scnnr.nextLine()+"\n");
-						//leftpage_lbl.setText(String.valueOf(1));
-					}
-					
-                    //rightpage_lbl.setText(String.valueOf(required_pg_no));
-                    
-					scanner.close();
-					scnnr.close();
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
+				tot_pg_in_cn++;
+				lblNewLabel_5.setText(String.valueOf(tot_pg_in_cn));
 			}
 			
 			else {
 				
-				///if previous page doesn't exist then don't create the required page
+				//if user entered page number greater than possible(> last_page + 1)
 				JOptionPane.showMessageDialog(null,"The number exceeds the total number of pages. Please enter a valid page number");	
 			}
-		//	people meet, they like something superficial, and then they fill in the blanks,with whatever they want to believe full stop
-			
 			
 		}
 	}
@@ -935,77 +1078,34 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 		}
 	}
 	
-	//copy page contents to required text area
-	public void copy(int req_ta,String book_name,int pg_no) {
-		File page=new File(pathGiver(currentNB,pg_no));
-		if(req_ta==1) {
-			if(page.exists()) {
-				first_page_textarea.setText("");
-				try {
-					
-					readingTxtFile(page, 0);
-	                leftpage_lbl.setText(String.valueOf(pg_no));
-					
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		}
-		
-		else {
-			if(page.exists()) {
-				second_page_textarea.setText("");
-				try {
-					
-					readingTxtFile(page, 1);
-	                rightpage_lbl.setText(String.valueOf(pg_no));
-					
-				} catch (Exception e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-			}
-		}
-	}
+	
 	
 	public void savingThroughLeftTextArea(int curr_pg_no) {
 		
 		//Scanner text_area_reader=new Scanner((Readable) first_page_textarea);
 		File mod_page = new File(pathGiver(currentNB, curr_pg_no));
 		try {
-			FileWriter mod_writer=new FileWriter(mod_page);
-			PrintWriter prt_wrter=new PrintWriter(mod_writer);
+			PrintWriter prt_wrter=new PrintWriter(new FileWriter(mod_page));
 			
 			prt_wrter.println(left_side.color_name);
+			prt_wrter.println(left_side.page_color);
 			prt_wrter.println(left_side.size);
 			prt_wrter.println(left_side.font);
 			prt_wrter.println(left_side.fontType);
 			first_page_textarea.write(prt_wrter);
 			prt_wrter.println();
 		    
-			//closing both writers
+			//closing pw
 			prt_wrter.close();
-			mod_writer.close();
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		if(Integer.parseInt(leftpage_lbl.getText())==Integer.parseInt(rightpage_lbl.getText())) {
-			//System.out.println("than than gopal");
+			
 			File txtFile = new File(pathGiver(currentNB, Integer.parseInt(leftpage_lbl.getText())));
 			second_page_textarea.setText("");
 			try {
-//				Scanner textreader = new Scanner(txtFile);
-//				for(int i=0;i<4;i++) {
-//					textreader.nextLine();
-//				}
-//				while(textreader.hasNextLine()) {
-//					second_page_textarea.append(textreader.nextLine()+"\n");
-//				}
-//				
-//				//closing the scanner
-//				textreader.close();
 				
 				readingTxtFile(txtFile,1);
 			} catch (Exception e) {
@@ -1021,19 +1121,18 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 		//Scanner text_area_reader=new Scanner((Readable) first_page_textarea);
 		File mod_page = new File(pathGiver(currentNB, curr_pg_no));
 		try {
-			FileWriter mod_writer=new FileWriter(mod_page);
-			PrintWriter prt_wrter=new PrintWriter(mod_writer);
+			PrintWriter prt_wrter=new PrintWriter(new FileWriter(mod_page));
 					
 			prt_wrter.println(right_side.color_name);
+			prt_wrter.println(right_side.page_color);
 			prt_wrter.println(right_side.size);
 			prt_wrter.println(right_side.font);
 			prt_wrter.println(right_side.fontType);
 			second_page_textarea.write(prt_wrter);
 			prt_wrter.println();
 			
-			//closing both writers
+			//closing pw
 			prt_wrter.close();
-			mod_writer.close();
 			
 		} catch (IOException e1) {
 			// TODO Auto-generated catch block
@@ -1044,16 +1143,7 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 			File txtFile = new File(pathGiver(currentNB, Integer.parseInt(rightpage_lbl.getText())));
 			first_page_textarea.setText("");
 			try {
-//				Scanner textreader = new Scanner(txtFile);
-//				for(int i=0;i<4;i++) {
-//					textreader.nextLine();
-//				}
-//				while(textreader.hasNextLine()) {
-//					first_page_textarea.append(textreader.nextLine()+"\n");
-//				}
-//				
-//				//CLosing scanner
-//				textreader.close();
+				
 				readingTxtFile(txtFile,0);
 				
 			} catch (Exception e) {
@@ -1065,8 +1155,8 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 	
 	public void showAddBook() {
 		
-		first_page_textarea.setText("Please select a note book first");
-		second_page_textarea.setText("Please select a note book first");
+		first_page_textarea.append("\n"+"Please select a note book first");
+		second_page_textarea.append("\n"+"Please select a note book first");
 	}
 	
 	public void deleteBook(File book) {
@@ -1104,10 +1194,7 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 			//for loop to loop through the available notebooks
 			for(int i=0;listReader.hasNextLine();i++) {
 	
-				String NB1 = listReader.nextLine();
-				System.out.println(NB1);
-				//book_list[i]=new JButton();
-				book_list[i].setText(NB1);
+				book_list[i].setText(listReader.nextLine());
 				book_list[i].setBackground(Color.DARK_GRAY);
 				book_list[i].setVisible(true);
 				book_list[i].setBorder(null);
@@ -1135,75 +1222,63 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 	public static void setChangesToTextAreas() {
 		first_page_textarea.setFont(new FontUIResource(left_side.font, left_side.fontType, left_side.size));
 		first_page_textarea.setForeground(new ColorUIResource(MyColor.getColor(left_side.color_name)));
+		first_page_textarea.setBackground(new ColorUIResource(MyColor.getColor(left_side.page_color)));
 		second_page_textarea.setFont(new FontUIResource(right_side.font, right_side.fontType, right_side.size));
 		second_page_textarea.setForeground(new ColorUIResource(MyColor.getColor(right_side.color_name)));
-	}
-
-	@Override
-	public void itemStateChanged(ItemEvent e) {
-		if(e.getSource()==comboBox) {
-			if(String.valueOf(comboBox.getSelectedItem())=="Dark") {
-				book_list_panel.setBackground(ColorUIResource.DARK_GRAY);
-				create_new_nb_btn.setForeground(ColorUIResource.WHITE);
-				Your_nbs_label.setForeground(ColorUIResource.LIGHT_GRAY);
-				for(int i=0;i<20;i++) {
-					book_list[i].setForeground(ColorUIResource.WHITE);
-				}
-				last_mod_lbl.setForeground(ColorUIResource.LIGHT_GRAY);
-				date_mod_lbl.setForeground(ColorUIResource.WHITE);
-				date_lbl.setForeground(ColorUIResource.WHITE);
-				date_created_lbl.setForeground(ColorUIResource.LIGHT_GRAY);
-				book_list_panel.setBorder(new LineBorder(ColorUIResource.WHITE, 2));
-				
-				Functions_panel.setBackground(ColorUIResource.LIGHT_GRAY);
-				menuBar.setBackground(ColorUIResource.DARK_GRAY);
-				insert_new_page_tf.setBorder(null);
-				
-				fileMenu.setForeground(ColorUIResource.LIGHT_GRAY);
-				helpMenu.setForeground(ColorUIResource.LIGHT_GRAY);
-				
-			}
-            if(String.valueOf(comboBox.getSelectedItem())=="Light") {
-            	book_list_panel.setBackground(ColorUIResource.LIGHT_GRAY);
-				create_new_nb_btn.setForeground(ColorUIResource.BLACK);
-				Your_nbs_label.setForeground(ColorUIResource.DARK_GRAY);
-				for(int i=0;i<20;i++) {
-					book_list[i].setForeground(ColorUIResource.BLACK);
-				}
-				last_mod_lbl.setForeground(ColorUIResource.BLACK);
-				date_mod_lbl.setForeground(ColorUIResource.BLACK);
-				date_lbl.setForeground(ColorUIResource.BLACK);
-				date_created_lbl.setForeground(ColorUIResource.BLACK);
-				book_list_panel.setBorder(new LineBorder(ColorUIResource.BLACK, 2));
-				
-				Functions_panel.setBackground(ColorUIResource.WHITE);
-				menuBar.setBackground(ColorUIResource.WHITE);
-				menuBar.setBorder(new LineBorder(ColorUIResource.BLACK,1));
-				menuBar.setBackground(ColorUIResource.LIGHT_GRAY);
-				fileMenu.setForeground(ColorUIResource.BLACK);
-				helpMenu.setForeground(ColorUIResource.BLACK);
-				pages_panel.setBorder(null);
-				insert_new_page_tf.setBorder(new LineBorder(ColorUIResource.BLACK,1));
-			}
-            else if(String.valueOf(comboBox.getSelectedItem())=="Custom") {
-            	new SettingScreen();
-            }
-		}
+		second_page_textarea.setBackground(new ColorUIResource(MyColor.getColor(right_side.page_color)));
 	}
 	
+	
+	//copy page contents to required text area
+	public void copy(int req_ta,String book_name,int pg_no) {
+		File page=new File(pathGiver(currentNB,pg_no));
+		if(page.exists()) {
+			
+			if(req_ta==1) {
+				
+				first_page_textarea.setText("");
+				try {
+					
+					readingTxtFile(page, 0);
+	                leftpage_lbl.setText(String.valueOf(pg_no));
+					
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+			}
+			else {
+				second_page_textarea.setText("");
+				try {
+					
+					readingTxtFile(page, 1);
+	                rightpage_lbl.setText(String.valueOf(pg_no));
+					
+				} catch (Exception e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}	
+			}
+		}
+		else {
+			JOptionPane.showMessageDialog(null, "You are already at the first / last page. You can't go beyond that");
+		}
+	}
+		
 	public void readingTxtFile(File page,int lr) {
 		Scanner pagereader = null;
 		if(lr==0) {
 			try {
 				pagereader = new Scanner(page);
 				first_page_textarea.setText("");
-				//System.out.println(pagereader.nextLine());
 				left_side.color_name = pagereader.nextLine();
+				left_side.page_color = pagereader.nextLine();
 				left_side.size = Integer.parseInt(pagereader.nextLine().trim());
 				left_side.font = pagereader.nextLine();
 				left_side.fontType = Integer.parseInt(pagereader.nextLine().trim());
 				first_page_textarea.setFont(new FontUIResource(left_side.font,left_side.fontType,left_side.size));
 				first_page_textarea.setForeground(MyColor.getColor(left_side.color_name));
+				first_page_textarea.setBackground(MyColor.getColor(left_side.page_color));
 				while(pagereader.hasNextLine()) {
 					
 					//left side page showing page1 
@@ -1221,11 +1296,13 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 				pagereader = new Scanner(page);
 				second_page_textarea.setText("");
 				right_side.color_name = pagereader.nextLine();
+				right_side.page_color = pagereader.nextLine();
 				right_side.size = Integer.parseInt(pagereader.nextLine().trim());
 				right_side.font = pagereader.nextLine();
 				right_side.fontType = Integer.parseInt(pagereader.nextLine().trim());
 				second_page_textarea.setFont(new FontUIResource(right_side.font,right_side.fontType,right_side.size));
 				second_page_textarea.setForeground(MyColor.getColor(right_side.color_name));
+				second_page_textarea.setBackground(MyColor.getColor(right_side.page_color));
 				while(pagereader.hasNextLine()) {
 					
 					//right side page showing page1
@@ -1241,10 +1318,92 @@ public class NewNoteBookPage extends JFrame implements ActionListener,ItemListen
 		}
 		pagereader.close();
 	}
+	
+	public void remove_curr(){
+		if(!currentNB.equals("")) {
+			System.out.println("okjb");
+			File info_file = new File(pathGiver(currentNB)+"\\"+currentNB+"_Book_Info.txt");
+			try {
+				PrintWriter pt = new PrintWriter(new FileWriter(info_file));
+				pt.println("Created On : "+date_lbl.getText());
+				pt.print("Last Mod : ");
+				String today=DateAndTimeGiver.dateGiver();
+				
+				pt.print(date_mod_lbl.getText()+" ");
+				pt.println(today);
+				
+				pt.println("Total Pages : "+lblNewLabel_5.getText());
+				pt.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			currentNB="";
+			current_notebook_shower.setText(currentNB);
+		}
+	}
+
+	@Override
+	public void windowOpened(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowClosing(WindowEvent e) {
+		// TODO Auto-generated method stub
+		if(currentNB!="") {
+			savingThroughLeftTextArea(Integer.parseInt(leftpage_lbl.getText()));
+			savingThroughRightTextArea(Integer.parseInt(rightpage_lbl.getText()));
+			remove_curr();
+		}
+	}
+
+	@Override
+	public void windowClosed(WindowEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void windowIconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeiconified(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowActivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void windowDeactivated(WindowEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+	public void adjustPage() {
+		
+		if(Integer.parseInt(leftpage_lbl.getText())>tot_pg_in_cn) {
+			System.out.println("left l");
+			copy(1, currentNB, tot_pg_in_cn);
+		}
+		if(Integer.parseInt(rightpage_lbl.getText())>tot_pg_in_cn) {
+			System.out.println("rright l");
+			copy(2, currentNB, tot_pg_in_cn);
+		}
+	}
 }
 	
 class Fontas{
 	String color_name;
+	String page_color;
 	String font;
 	int fontType;
 	int size;

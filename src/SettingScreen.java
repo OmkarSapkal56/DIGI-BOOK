@@ -3,6 +3,7 @@ import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.time.Year;
 import java.util.HashMap;
 
 import javax.swing.ImageIcon;
@@ -25,18 +26,15 @@ import javax.swing.JTextArea;
 public class SettingScreen extends JFrame implements ItemListener {
 
 	private JPanel contentPane;
-    private ImageIcon txtareapic = new ImageIcon(new ImageIcon("both_text_areas.png").getImage().getScaledInstance(641,409,100));
 	
     String [] colorStrings = {"black","blue","cyan","darkgray","gray","green","lightgray","magneta","orange","pink","red","white","yellow"};
     
-    String [] light_colStrings = {"cyan","gray","green","yellow","lightgray","orange","white","pink"};
+    String [] light_colStrings = {"cyan","green","yellow","lightgray","orange","white","pink","gray"};
     String [] dark_colStrings = {"black","blue","darkgray","magneta","red"};	    
     
     
     JComboBox comboBox;
     JComboBox comboBox_1;
-    JComboBox comboBox_2 ;
-    JComboBox comboBox_3;
     JComboBox comboBox_4;
     JComboBox comboBox_5;
     
@@ -53,53 +51,14 @@ public class SettingScreen extends JFrame implements ItemListener {
 			color_comb.put(dark_colStrings[i],1);
 		}
 		
-		//for the main j frame
 		this.setTitle("Settings");
 		this.setDefaultCloseOperation(JFrame.HIDE_ON_CLOSE);
-		this.setBounds(250,150,1000,520);
+		this.setBounds(250,150,800,520);
 		contentPane = new JPanel();
 		contentPane.setBackground(Color.DARK_GRAY);
 		this.setContentPane(contentPane);
-		//this.setResizable(false);
 		this.setVisible(true);
 		contentPane.setLayout(new BorderLayout(0, 0));
-		
-		JPanel panel = new JPanel();
-		panel.setPreferredSize(new Dimension(200, 10));
-		panel.setBackground(Color.DARK_GRAY);
-		panel.setBorder(null);
-		contentPane.add(panel, BorderLayout.WEST);
-		panel.setLayout(null);
-		
-		JLabel lblNewLabel_3 = new JLabel("Book list area :");
-		lblNewLabel_3.setForeground(Color.WHITE);
-		lblNewLabel_3.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel_3.setBounds(10, 10, 94, 22);
-		panel.add(lblNewLabel_3);
-		
-		JLabel lblNewLabel_4 = new JLabel("Book area :");
-		lblNewLabel_4.setForeground(Color.WHITE);
-		lblNewLabel_4.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel_4.setBounds(10, 73, 94, 22);
-		panel.add(lblNewLabel_4);
-		
-		JLabel lblNewLabel = new JLabel("Left page :");
-		lblNewLabel.setForeground(Color.WHITE);
-		lblNewLabel.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel.setBounds(10, 137, 94, 22);
-		panel.add(lblNewLabel);
-		
-		JLabel lblNewLabel_5 = new JLabel("Right page :");
-		lblNewLabel_5.setForeground(Color.WHITE);
-		lblNewLabel_5.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel_5.setBounds(10, 201, 94, 22);
-		panel.add(lblNewLabel_5);
-		
-		JLabel lblNewLabel_6 = new JLabel("Page dividers and borders :");
-		lblNewLabel_6.setForeground(Color.WHITE);
-		lblNewLabel_6.setFont(new Font("Tahoma", Font.BOLD, 12));
-		lblNewLabel_6.setBounds(10, 265, 180, 22);
-		panel.add(lblNewLabel_6);
 		
 		JPanel panel_1 = new JPanel();
 		panel_1.setBorder(new LineBorder(Color.WHITE));
@@ -110,7 +69,6 @@ public class SettingScreen extends JFrame implements ItemListener {
 		JPanel panel_2 = new JPanel();
 		panel_2.setBorder(null);
 		panel_2.setBackground(Color.LIGHT_GRAY);
-		panel_2.setForeground(Color.LIGHT_GRAY);
 		panel_2.setPreferredSize(new Dimension(10, 60));
 		panel_2.setOpaque(true);
 		panel_1.add(panel_2, BorderLayout.NORTH);
@@ -180,25 +138,11 @@ public class SettingScreen extends JFrame implements ItemListener {
 		panel_4.add(panel_6);
 		panel_6.setLayout(null);
 		
-		comboBox_2 = new JComboBox(colorStrings);
-		comboBox_2.setFocusable(false);
-		comboBox_2.setBorder(new LineBorder(Color.DARK_GRAY));
-		comboBox_2.setBounds(10, 10, 94, 22);
-		panel_6.add(comboBox_2);
-		comboBox_2.addItemListener(this);
-		
 		JPanel panel_7 = new JPanel();
 		panel_7.setBounds(337, 10, 317, 384);
 		panel_4.add(panel_7);
 		panel_7.setLayout(null);
 		
-		comboBox_3 = new JComboBox(colorStrings);
-		comboBox_3.setFocusable(false);
-		comboBox_3.setBorder(new LineBorder(Color.DARK_GRAY));
-		comboBox_3.setBounds(10, 10, 94, 22);
-		panel_7.add(comboBox_3);
-		comboBox_3.addItemListener(this);
-		comboBox_4.addItemListener(this);
 	}
 	@Override
 	public void itemStateChanged(ItemEvent e) {
@@ -209,27 +153,141 @@ public class SettingScreen extends JFrame implements ItemListener {
 			NewNoteBookPage.book_list_panel.setBackground(MyColor.getColor(a));
 			if(color_comb.get(a)==0) {
 				
+				NewNoteBookPage.lblNewLabel_5.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.lblNewLabel_4.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.date_created_lbl.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.date_lbl.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.date_mod_lbl.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.last_mod_lbl.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.lblNewLabel_3.setForeground(ColorUIResource.BLACK);
+				for(int i=0;i<20;i++) {
+					NewNoteBookPage.book_list[i].setForeground(ColorUIResource.BLACK);
+				}
+				NewNoteBookPage.Your_nbs_label.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.create_new_nb_btn.setForeground(ColorUIResource.BLACK);
 			}
 			else {
 				
+				NewNoteBookPage.lblNewLabel_5.setForeground(ColorUIResource.WHITE);
+				NewNoteBookPage.lblNewLabel_4.setForeground(ColorUIResource.LIGHT_GRAY);
+				NewNoteBookPage.date_created_lbl.setForeground(ColorUIResource.LIGHT_GRAY);
+				NewNoteBookPage.date_lbl.setForeground(ColorUIResource.WHITE);
+				NewNoteBookPage.date_mod_lbl.setForeground(ColorUIResource.WHITE);
+				NewNoteBookPage.last_mod_lbl.setForeground(ColorUIResource.LIGHT_GRAY);
+				NewNoteBookPage.lblNewLabel_3.setForeground(ColorUIResource.BLACK);
+				for(int i=0;i<20;i++) {
+					NewNoteBookPage.book_list[i].setForeground(ColorUIResource.WHITE);
+				}
+				NewNoteBookPage.Your_nbs_label.setForeground(ColorUIResource.LIGHT_GRAY);
+				NewNoteBookPage.create_new_nb_btn.setForeground(ColorUIResource.WHITE);
 			}
-			//panel_3.setBackground(MyColor.getColor((String.valueOf(comboBox.getSelectedItem()))));
 		}
 		else if(e.getSource()==comboBox_1) {
-			a = String.valueOf(comboBox_1  .getSelectedItem());
+			a = String.valueOf(comboBox_1.getSelectedItem());
 			NewNoteBookPage.Functions_panel.setBackground(MyColor.getColor(a));
-		}
-		else if(e.getSource()==comboBox_2) {
-			a = String.valueOf(comboBox_2.getSelectedItem());
-			NewNoteBookPage.first_page_textarea.setBackground(MyColor.getColor(a));
-		}
-		else if(e.getSource()==comboBox_3) {
-			a = String.valueOf(comboBox_3.getSelectedItem());
-			NewNoteBookPage.second_page_textarea.setBackground(MyColor.getColor(a));
+			if(color_comb.get(a)==0) {
+				System.out.println("yes");
+				NewNoteBookPage.textField.setBorder(new LineBorder(ColorUIResource.BLACK,1));
+				NewNoteBookPage.textField_1.setBorder(new LineBorder(ColorUIResource.BLACK,1));
+				NewNoteBookPage.insert_new_page_tf.setBorder(new LineBorder(ColorUIResource.BLACK,1));
+				
+				NewNoteBookPage.insert_new_page_lbl.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.current_nb_label.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.current_notebook_shower.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.lblNewLabel.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.lblNewLabel_1.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.lblNewLabel_2.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.lblNewLabel_3.setForeground(ColorUIResource.BLACK);
+				
+				NewNoteBookPage.delete_book_btn.setBorder(null);
+				NewNoteBookPage.btnNewButton.setBorder(null);
+				NewNoteBookPage.btnNewButton_1.setBorder(null);
+				NewNoteBookPage.change_font_btn.setBorder(null);
+					
+				
+				
+			}
+			else {
+				System.out.println("no");
+				NewNoteBookPage.textField.setBorder(null);
+				NewNoteBookPage.textField_1.setBorder(null);
+				NewNoteBookPage.insert_new_page_tf.setBorder(null);
+				
+				NewNoteBookPage.insert_new_page_lbl.setForeground(ColorUIResource.WHITE);
+				NewNoteBookPage.current_nb_label.setForeground(ColorUIResource.WHITE);
+				NewNoteBookPage.current_notebook_shower.setForeground(ColorUIResource.WHITE);
+				NewNoteBookPage.lblNewLabel.setForeground(ColorUIResource.WHITE);
+				NewNoteBookPage.lblNewLabel_1.setForeground(ColorUIResource.WHITE);
+				NewNoteBookPage.lblNewLabel_2.setForeground(ColorUIResource.WHITE);
+				NewNoteBookPage.lblNewLabel_3.setForeground(ColorUIResource.WHITE);
+				
+				if(a=="gray") {
+					System.out.println("this is there");
+					NewNoteBookPage.delete_book_btn.setBorder(new LineBorder(ColorUIResource.WHITE,1));
+					NewNoteBookPage.btnNewButton.setBorder(new LineBorder(ColorUIResource.WHITE,1));
+					NewNoteBookPage.btnNewButton_1.setBorder(new LineBorder(ColorUIResource.WHITE,1));
+					NewNoteBookPage.change_font_btn.setBorder(new LineBorder(ColorUIResource.WHITE,1));
+				}
+				else {
+					NewNoteBookPage.delete_book_btn.setBorder(null);
+					NewNoteBookPage.btnNewButton.setBorder(null);
+					NewNoteBookPage.btnNewButton_1.setBorder(null);
+					NewNoteBookPage.change_font_btn.setBorder(null);
+				}
+			}
 		}
 		else if(e.getSource()==comboBox_4) {
 			a = String.valueOf(comboBox_4.getSelectedItem());
 			NewNoteBookPage.pages_panel.setBackground(MyColor.getColor(a));
+			if(color_comb.get(a)==0) {
+				NewNoteBookPage.Enter_page_no_lbl_left.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.Enter_page_no_lbl_right.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.leftpage_lbl.setForeground(ColorUIResource.BLACK);
+				NewNoteBookPage.rightpage_lbl.setForeground(ColorUIResource.BLACK);
+				if(a=="white") {
+					NewNoteBookPage.page_no_tf_left.setBorder(new LineBorder(ColorUIResource.BLACK,1));
+					NewNoteBookPage.page_no_tf_right.setBorder(new LineBorder(ColorUIResource.BLACK,1));
+				}
+				else {
+					NewNoteBookPage.page_no_tf_left.setBorder(null);
+					NewNoteBookPage.page_no_tf_right.setBorder(null);
+				}
+				if(a=="lightgray") {
+					NewNoteBookPage.left_btn_next.setBorder(new LineBorder(ColorUIResource.BLACK,1));
+					NewNoteBookPage.left_btn_prev.setBorder(new LineBorder(ColorUIResource.BLACK,1));
+					NewNoteBookPage.right_btn_next.setBorder(new LineBorder(ColorUIResource.BLACK,1));
+					NewNoteBookPage.left_btn_prev.setBorder(new LineBorder(ColorUIResource.BLACK,1));
+					NewNoteBookPage.delete_pg_btn_left.setBorder(new LineBorder(ColorUIResource.BLACK,1));
+					NewNoteBookPage.delete_pg_btn_right.setBorder(new LineBorder(ColorUIResource.BLACK,1));
+					
+				}
+				else {
+					
+					NewNoteBookPage.left_btn_next.setBorder(null);
+					NewNoteBookPage.left_btn_prev.setBorder(null);
+					NewNoteBookPage.right_btn_next.setBorder(null);
+					NewNoteBookPage.left_btn_prev.setBorder(null);
+					NewNoteBookPage.delete_pg_btn_left.setBorder(null);
+					NewNoteBookPage.delete_pg_btn_right.setBorder(null);
+				}
+			}
+			else {
+				
+				NewNoteBookPage.Enter_page_no_lbl_left.setForeground(ColorUIResource.WHITE);
+				NewNoteBookPage.Enter_page_no_lbl_right.setForeground(ColorUIResource.WHITE);
+				NewNoteBookPage.leftpage_lbl.setForeground(ColorUIResource.WHITE);
+				NewNoteBookPage.rightpage_lbl.setForeground(ColorUIResource.WHITE);
+				
+				NewNoteBookPage.left_btn_next.setBorder(null);
+				NewNoteBookPage.left_btn_prev.setBorder(null);
+				NewNoteBookPage.right_btn_next.setBorder(null);
+				NewNoteBookPage.right_btn_prev.setBorder(null);
+				NewNoteBookPage.delete_pg_btn_left.setBorder(null);
+				NewNoteBookPage.delete_pg_btn_right.setBorder(null);
+				NewNoteBookPage.page_no_tf_left.setBorder(null);
+				NewNoteBookPage.page_no_tf_right.setBorder(null);
+				
+			}
 		}
 		else if(e.getSource()==comboBox_5) {
 			a = String.valueOf(comboBox_5.getSelectedItem());
@@ -247,6 +305,5 @@ public class SettingScreen extends JFrame implements ItemListener {
 			a = String.valueOf(comboBox_5.getSelectedItem());
 			NewNoteBookPage.menuBar.setBackground(MyColor.getColor(a));
 		}
-		
 	}
 }
